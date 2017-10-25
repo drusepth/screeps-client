@@ -1,0 +1,61 @@
+var constants     = require('constants');
+
+var roleHarvester = require('role.harvester');
+var roleBuilder   = require('role.builder');
+var roleUpgrader  = require('role.upgrader');
+var roleFreeAgent = require('role.free_agent');
+
+var serviceMemory     = require('service.memory');
+var servicePopulation = require('service.population');
+var serviceTagger     = require('service.tagger');
+var serviceStats      = require('service.stats');
+
+module.exports.loop = function () {
+    // Clear memory storage for any since-diseased screeps
+    serviceMemory.clearDeadScreepMemory();
+
+    // Bring the fleet up to optimal population levels
+    servicePopulation.spawnOptimalScreeps('harvester');
+    servicePopulation.spawnOptimalScreeps('builder');
+    servicePopulation.spawnOptimalScreeps('upgrader');
+    servicePopulation.spawnOptimalScreeps('fortifier');
+
+    // Tag every screep with a role-unique ID:
+    serviceTagger.tagEachRole();
+
+
+
+
+
+    var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+
+    var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+
+    if(Game.spawns['Ankov'].spawning) {
+        var spawningCreep = Game.creeps[Game.spawns['Ankov'].spawning.name];
+        Game.spawns['Ankov'].room.visual.text(
+            '🛠️' + spawningCreep.memory.role,
+            Game.spawns['Ankov'].pos.x + 1,
+            Game.spawns['Ankov'].pos.y,
+            {align: 'left', opacity: 0.8});
+    }
+
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if(creep.memory.role == 'harvester') {
+            roleHarvester.run(creep);
+        }
+        if(creep.memory.role == 'upgrader') {
+            roleUpgrader.run(creep);
+        }
+        if(creep.memory.role == 'builder') {
+            roleBuilder.run(creep);
+        }
+        if(creep.memory.role == 'free-agent') {
+            roleFreeAgent.run(creep);
+        }
+    }
+
+    // Print a summary of the world after this tick:
+    serviceStats.printRoleCounts();
+}

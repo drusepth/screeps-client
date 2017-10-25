@@ -1,0 +1,28 @@
+var optimalService = require('service.optimization');
+
+module.exports = {
+    tagEachRole: function () {
+        // TODO: stick these in a more reusable constant?
+        var allRoles = ['harvester', 'builder', 'upgrader', 'free-agent'];
+
+        for (var i = 0; i < allRoles.length; i++) {
+            var role = allRoles[i];
+            var maximumForThisRole = 100000;
+
+            if (role == 'harvester') {
+                maximumForThisRole = optimalService.optimalHarvesterCount();
+            } else if (role == 'builder') {
+                maximumForThisRole = optimalService.optimalBuilderCount();
+            }
+
+            var screepsOfThisRole = _.filter(Game.creeps, (creep) => creep.memory.role == role);
+            for (var j = 0; j < screepsOfThisRole.length; j++) {
+                if (j < maximumForThisRole) {
+                    screepsOfThisRole[j].memory.roleId = j;
+                } else {
+                    screepsOfThisRole[j].memory.role = 'free-agent';
+                }
+            }
+        }
+    }
+};

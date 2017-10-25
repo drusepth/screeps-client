@@ -1,0 +1,73 @@
+var constants = require('constants');
+
+var serviceOptimization = require('service.optimization');
+
+module.exports = {
+    spawnOptimalScreeps: function (role) {
+        var currentRoleCount = _.filter(Game.creeps, (creep) => creep.memory.role == role).length;
+
+        var optimalRoleCount = 0;
+        if (role == 'harvester') {
+            optimalRoleCount = serviceOptimization.optimalHarvesterCount();
+        } else if (role == 'builder') {
+            optimalRoleCount = serviceOptimization.optimalBuilderCount();
+        } else if (role == 'upgrader') {
+            optimalRoleCount = serviceOptimization.optimalUpgraderCount();
+        } else if (role == 'fortifier') {
+            optimalRoleCount = serviceOptimization.optimalUpgraderCount();
+        }
+
+        if (currentRoleCount < optimalRoleCount) {
+            var availableFreeAgents = _.filter(Game.creeps, (creep) => creep.memory.role == 'free-agent');
+            if (availableFreeAgents.length > 0) {
+                this.assignJobToFreeAgent(availableFreeAgents, role);
+            } else {
+                if (role == 'harvester') {
+                    this.spawnBestScreep('harvester', [WORK, CARRY, MOVE], [WORK, MOVE]);
+                } else if (role == 'builder') {
+                    this.spawnBestScreep('builder', [WORK, CARRY, MOVE], [WORK, MOVE]);
+                } else if (role == 'upgrader') {
+                    this.spawnBestScreep('upgrader', [WORK, CARRY, MOVE], [WORK, MOVE]);
+                } else if (role == 'fortifier') {
+                    this.spawnBestScreep('upgrader', [WORK, CARRY, MOVE], [WORK, MOVE]);
+                }
+            }
+        }
+    },
+
+    assignJobToFreeAgent: function (agents, job) {
+        if (agents.length > 0) {
+            agents[0].say("-> " + job);
+            agents[0].memory.role = job;
+        }
+    },
+
+    // spawnBestScreep('harvester', [WORK, CARRY, MOVE], [WORK, MOVE])
+    spawnBestScreep: function (role, minimumBody, bodyImprovementStep) {
+        var bodyToSpawn = [];
+        var availableEnergy = Game.spawns['Ankov'].room.energyAvailable;
+
+        for (var i = 0; i < minimumBody.length; i++) {
+            var bodyPart = minimumBody[i];
+
+            bodyToSpawn.push(bodyPart);
+            availableEnergy -= constants.mechanics.costs.body[bodyPart];
+        }
+
+        var improvementStepCost = 0;
+        for (var i = 0; i < bodyImprovementStep.length; i++) {
+            var bodyPart = bodyImprovementStep[i];
+            improvementStepCost += constants.mechanics.costs.body[bodyPart];
+        }
+
+        while (improvementStepCost > 0 && availableEnergy >= improvementStepCost) {
+            for (var i = 0; i < bodyImprovementStep.length; i++) {
+                bodyToSpawn.push(bodyImprovementStep[i]);
+            }
+            availableEnergy -= improvementStepCost;
+        }
+
+        var newName = 'BBB' + Game.time;
+        Game.spawns['Ankov'].spawnCreep(bodyToSpawn, newName, { memory: { role: role } });
+    }
+};
