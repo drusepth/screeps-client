@@ -34,7 +34,7 @@ var roleFortifier = {
     }
   },
 
-  energySourceByDistance: function () {
+  closestEnergySource: function () {
     return this.creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
   },
 
