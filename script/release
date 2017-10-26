@@ -1,0 +1,4 @@
+rm -rf dist/*
+cp *.js dist/
+git commit -am "Release: `date`"
+grunt screeps

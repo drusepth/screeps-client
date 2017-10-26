@@ -54,19 +54,25 @@ var roleFortifier = {
         }
 	},
 
-	structuresSortedByRepairNeed: function () {
+  structuresSortedByRepairNeed: function () {
 	    return this.creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (
+                    structure.structureType == STRUCTURE_TOWER ||
                     structure.structureType == STRUCTURE_WALL ||
                     structure.structureType == STRUCTURE_RAMPART ||
-                    structure.structureType == STRUCTURE_TOWER ||
                     structure.structureType == STRUCTURE_CONTAINER
                 ) && (
-                    structure.hits < structure.hitsMax
+                    structure.hits < structure.hitsMax ||
+                    structure.energy < structure.energyCapacity
                 );
             }
-        }).sort((a,b) => a.hits - b.hits);
+        }).sort((s1, s2) => {
+          var s1_cmp = (s1.structureType == STRUCTURE_TOWER ? s1.energy : s1.hits);
+          var s2_cmp = (s2.structureType == STRUCTURE_TOWER ? s2.energy : s2.hits);
+
+          s2_cmp - s1_cmp
+        });
 	},
 
 	energyStockpiles: function () {

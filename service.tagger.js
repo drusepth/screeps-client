@@ -10,9 +10,6 @@ module.exports = {
             var maximumForThisRole = optimalService.optimalRoleCount(role);
             var screepsOfThisRole = _.filter(Game.creeps, (creep) => creep.memory.role == role);
 
-            console.log('max ' + maximumForThisRole + ' ' + role);
-            console.log('current ' + screepsOfThisRole.length);
-
             for (var j = 0; j < screepsOfThisRole.length; j++) {
                 if (j < maximumForThisRole) {
                     screepsOfThisRole[j].memory.roleId = j;
