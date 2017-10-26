@@ -63,7 +63,7 @@ var roleFortifier = {
                     structure.structureType == STRUCTURE_RAMPART ||
                     structure.structureType == STRUCTURE_CONTAINER
                 ) && (
-                    structure.hits < structure.hitsMax ||
+                    structure.hits   < structure.hitsMax ||
                     structure.energy < structure.energyCapacity
                 );
             }
@@ -71,7 +71,7 @@ var roleFortifier = {
           var s1_cmp = (s1.structureType == STRUCTURE_TOWER ? s1.energy : s1.hits);
           var s2_cmp = (s2.structureType == STRUCTURE_TOWER ? s2.energy : s2.hits);
 
-          s2_cmp - s1_cmp
+          return s1_cmp - s2_cmp;
         });
 	},
 
