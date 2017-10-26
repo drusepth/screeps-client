@@ -43,10 +43,16 @@ module.exports = {
     // * the amount of buildings needing fortified
 
     var screepsPerTower = 1;
-    var currentTowers = Game.spawns['Ankov'].room.find(FIND_MY_STRUCTURES, {
-      filter: (structure) => { return structure.structureType == STRUCTURE_TOWER; }
+    var currentTowersNeedingRepair = Game.spawns['Ankov'].room.find(FIND_MY_STRUCTURES, {
+      filter: (structure) => {
+        return structure.structureType == STRUCTURE_TOWER &&
+        (
+          structure.hits   < structure.maxHits ||
+          structure.energy < structure.energyCapacity
+        )
+      }
     }).length;
 
-    return 1 + (screepsPerTower * currentTowers);
+    return 1 + (screepsPerTower * currentTowersNeedingRepair);
   }
 };
