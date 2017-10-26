@@ -45,7 +45,7 @@ module.exports = {
     var screepsPerTower = 1;
     var currentTowers = Game.spawns['Ankov'].room.find(FIND_MY_STRUCTURES, {
       filter: (structure) => { return structure.structureType == STRUCTURE_TOWER; }
-    ).length;
+    }).length;
 
     return 1 + (screepsPerTower * currentTowers);
   }
