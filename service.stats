@@ -5,7 +5,7 @@ module.exports = {
       var harvesters = this.screepsOfRole('harvester');
       var builders   = this.screepsOfRole('builder');
       var upgraders  = this.screepsOfRole('upgrader');
-      var fortifiers = this.screepsOfRole('fortifiers');
+      var fortifiers = this.screepsOfRole('fortifier');
       var freeagents = this.screepsOfRole('free-agent');
 
       console.log('Tick stats');

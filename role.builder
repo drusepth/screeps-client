@@ -3,6 +3,7 @@ var constants = require('constants');
 var roleBuilder = {
     run: function(creep) {
         this.creep = creep;
+        this.creep.say('builder');
 
 	    if (this.currentlyBuilding() && this.outOfEnergy()) {
             this.orderToCollectEnergy();

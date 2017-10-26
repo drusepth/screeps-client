@@ -3,6 +3,7 @@ var constants = require('constants');
 var roleUpgrader = {
     run: function(creep) {
         this.creep = creep;
+        this.creep.say('upgrader');
 
 	    if (this.currentlyUpgrading() && this.outOfEnergy()) {
             this.orderToCollectEnergy();
@@ -18,7 +19,7 @@ var roleUpgrader = {
             }
 	    } else {
 	        var stockedStockpiles = this.energyStockpiles();
-	        if (stockedStockpiles.length > 0) {
+	        if (stockedStockpiles.length > 0 && Game.spawns['Ankov'].room.energyAvailable > 300) {
 	            // TODO: assign to closest stockpile
 	            var assignedStockpile = stockedStockpiles[0];
 	            if (this.creep.withdraw(assignedStockpile, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

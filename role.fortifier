@@ -3,22 +3,23 @@ var constants = require('constants');
 var roleFortifier = {
     run: function(creep) {
         this.creep = creep;
+        this.creep.say('fortifier');
 
         var repairableTargets = this.structuresSortedByRepairNeed();
         if (repairableTargets.length == 0) {
-            self.creep.say('Job done!');
-            self.creep.memory.role = 'free-agent';
+            this.creep.say('Job done!');
+            this.creep.memory.role = 'free-agent';
             return;
         }
 
         var designatedRepairTarget = repairableTargets[0]; // sorted by lowest-hits first
-        if (self.outOfEnergy()) {
+        if (this.outOfEnergy()) {
             this.goGetEnergy();
         }
 
         if (this.creep.repair(designatedRepairTarget) == ERR_NOT_IN_RANGE) {
-            if (this.creep.atEnergyCapacity()) {
-                this.creep.moveTo(designatedRepairTarget, { visualizePathStyle: { stroke: '#582828' } });
+            if (this.atEnergyCapacity()) {
+                this.creep.moveTo(designatedRepairTarget, { visualizePathStyle: { stroke: '#ffaa00' } });
             } else {
                 this.goGetEnergy();
             }
@@ -59,12 +60,26 @@ var roleFortifier = {
                 return (
                     structure.structureType == STRUCTURE_WALL ||
                     structure.structureType == STRUCTURE_RAMPART ||
-                    structure.structureType == STRUCTURE_TOWER
+                    structure.structureType == STRUCTURE_TOWER ||
+                    structure.structureType == STRUCTURE_CONTAINER
                 ) && (
                     structure.hits < structure.hitsMax
                 );
             }
         }).sort((a,b) => a.hits - b.hits);
+	},
+
+	energyStockpiles: function () {
+	    return this.creep.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (
+                    structure.structureType == STRUCTURE_EXTENSION ||
+                    structure.structureType == STRUCTURE_SPAWN
+                ) && (
+                    structure.energy >= this.creep.pos.findPathTo(structure).length
+                );
+            }
+        });
 	},
 };
 

@@ -4,6 +4,7 @@ var roleHarvester = {
     run: function(creep) {
         this.creep = creep;
         this.room  = creep.room;
+        this.creep.say('harvester');
 
 	    if (this.canCarryMoreEnergy()) {
             this.mineEnergy();
@@ -17,12 +18,32 @@ var roleHarvester = {
 	},
 
 	mineEnergy: function () {
-	    var energySources  = this.room.find(FIND_SOURCES);
-	    var assignedSource = this.creep.memory.roleId % energySources.length;
+	    var energySources = this.energySourcesByDistance();
+	    var assignedSource = this.decideWhichSourceToMine();
 
         if (this.creep.harvest(energySources[assignedSource]) == ERR_NOT_IN_RANGE) {
             this.moveTowardsEnergySource(energySources[assignedSource]);
         }
+	},
+
+	energySourcesByDistance: function () {
+	    var activeSources = this.creep.room.find(FIND_SOURCES_ACTIVE);
+	    return _.sortBy(activeSources, s => Game.spawns['Ankov'].pos.getRangeTo(s));
+	},
+
+	decideWhichSourceToMine: function () {
+	    var harvesterCount = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester').length;
+	    var distancedEnergySources = this.energySourcesByDistance();
+
+	    // TODO: grab the creeps-per-source constant from service.population instead of using a hard-coded value here
+	    var creepsPerSource = 4;
+
+	    // We sort energy sources by distance and then bucket by roleId for assignment, so the first N creeps go to the closest
+	    // energy source, then the next N creeps go to the next-closest, and so on.
+	    var sourceGroup = parseInt(this.creep.memory.roleId / creepsPerSource, 10);
+	    var assignedSourceId = parseInt(sourceGroup % distancedEnergySources.length, 10);
+
+        return assignedSourceId;
 	},
 
 	moveTowardsEnergySource: function (energySource) {
@@ -35,7 +56,8 @@ var roleHarvester = {
                 return (
                     structure.structureType == STRUCTURE_EXTENSION ||
                     structure.structureType == STRUCTURE_SPAWN ||
-                    structure.structureType == STRUCTURE_TOWER
+                    structure.structureType == STRUCTURE_TOWER ||
+                    structure.structureType == STRUCTURE_CONTAINER
                 ) && (
                     structure.energy < structure.energyCapacity
                 );

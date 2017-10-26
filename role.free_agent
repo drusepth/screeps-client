@@ -4,6 +4,7 @@ var roleFreeAgent = {
     run: function(creep) {
         this.creep = creep;
         this.room  = creep.room;
+        this.creep.say('free');
 
         this.creep.moveTo(37, 33, { visualizePathStyle: { stroke: '#ffffff' } });
 
@@ -13,7 +14,7 @@ var roleFreeAgent = {
 	},
 
 	convertToUpgrader: function () {
-	    this.memory.role = 'upgrader';
+	    this.creep.memory.role = 'upgrader';
 	}
 };
 

@@ -3,6 +3,40 @@ var constants = require('constants');
 var serviceOptimization = require('service.optimization');
 
 module.exports = {
+    decideWhatToSpawn: function () {
+        // We want to prioritize spawning first-ofs of each role over spawning duplicates of any role
+        var nonZeroPreferenceOrder = ['harvester', 'upgrader', 'fortifier', 'builder'];
+        for (var i = 0; i < nonZeroPreferenceOrder.length; i++) {
+            var role = nonZeroPreferenceOrder[i];
+            var roleCurrentCount = _.filter(Game.creeps, (creep) => creep.memory.role == role).length;
+
+            if (roleCurrentCount >= serviceOptimization.optimalRoleCount(role)) {
+                continue;
+            }
+
+            // Treat 0 and 1 harvesters as the same: we always want at least 2, not at least 1. #needsrefactor
+            if (roleCurrentCount == 0 || (roleCurrentCount == 'harvester' && roleCurrentCount == 1)) {
+                console.log('new nonzero spawn: ' + role);
+
+                this.spawnOptimalScreeps(role);
+                return;
+            }
+        }
+
+        // If we have at least one of each role, we can go ahead and go down the list and spawn duplicates in the proper order
+        var duplicatePreferenceOrder = ['harvester', 'builder', 'fortifier', 'upgrader'];
+        for (var i = 0; i < duplicatePreferenceOrder.length; i++) {
+            var role = duplicatePreferenceOrder[i];
+            var roleCurrentCount = _.filter(Game.creeps, (creep) => creep.memory.role == role).length;
+
+
+            if (roleCurrentCount < serviceOptimization.optimalRoleCount(role)) {
+                console.log('new duplicate spawn: ' + role);
+                this.spawnOptimalScreeps(role);
+            }
+        }
+    },
+
     spawnOptimalScreeps: function (role) {
         var currentRoleCount = _.filter(Game.creeps, (creep) => creep.memory.role == role).length;
 
@@ -29,9 +63,11 @@ module.exports = {
                 } else if (role == 'upgrader') {
                     this.spawnBestScreep('upgrader', [WORK, CARRY, MOVE], [WORK, MOVE]);
                 } else if (role == 'fortifier') {
-                    this.spawnBestScreep('upgrader', [WORK, CARRY, MOVE], [WORK, MOVE]);
+                    this.spawnBestScreep('fortifier', [WORK, CARRY, MOVE], [WORK, MOVE]);
                 }
             }
+        } else {
+            console.log('decided not to spawn ' + role);
         }
     },
 
