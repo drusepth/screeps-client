@@ -27,6 +27,20 @@ module.exports.loop = function () {
     // Display spawning info next to our spawn
     serviceDecorator.displaySpawningCreep();
 
+    if (undefined === Memory.rooms) {
+      Memory.rooms = {};
+    }
+    if (undefined === Memory.rooms['Ankov']) {
+      Memory.rooms['Ankov'] = {};
+    }
+    if (undefined === Memory.rooms['Ankov']['roadsPlanned']) {
+      Memory.rooms['Ankov']['roadsPlanned'] = false;
+    }
+
+    if (Memory.rooms['Ankov']['roadsPlanned']) {
+      supervisorRoads.constructEnergyRoads('Ankov');)
+    }
+
     // Run creep logic
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
