@@ -38,7 +38,7 @@ module.exports.loop = function () {
     }
 
     if (Memory.rooms['Ankov']['roadsPlanned']) {
-      supervisorRoads.constructEnergyRoads('Ankov');)
+      supervisorRoads.constructEnergyRoads('Ankov');
     }
 
     // Run creep logic
