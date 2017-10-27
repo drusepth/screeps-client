@@ -29,7 +29,10 @@ module.exports = {
     // * the number of builings that need repaired right now (TBD janitor/repairman)
 
     var screepsPerConstruction = 1;
-    return screepsPerConstruction * Game.spawns['Ankov'].room.find(FIND_CONSTRUCTION_SITES).length;
+    var buildersToSpawn = screepsPerConstruction * Game.spawns['Ankov'].room.find(FIND_CONSTRUCTION_SITES).length;
+
+    var maximumBuildersAtOnce = 8;
+    return Math.min(maximumBuildersAtOnce, buildersToSpawn);
   },
 
   optimalUpgraderCount: function () {
