@@ -4,3 +4,6 @@ Evolution:
 
 Expansions:
 * Determines when to colonize an additional room.
+
+Roadplanner:
+* Game.rooms.sim.createConstructionSite(10, 15, STRUCTURE_ROAD);

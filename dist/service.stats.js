@@ -10,7 +10,7 @@ module.exports = {
 
       console.log('Tick stats');
       console.log('------------------------');
-      console.log('Energy available: ' + Game.spawns['Ankov'].room.energyAvailable);
+      console.log('Energy available: ' + Game.spawns['Ankov'].room.energyAvailable + ' / ' + Game.spawns['Ankov'].room.energyCapacityAvailable);
       console.log('Harvesters:  ' + harvesters + ' / ' + optimals.optimalHarvesterCount());
       console.log('Builders:    ' + builders   + ' / ' + optimals.optimalBuilderCount());
       console.log('Upgraders:   ' + upgraders  + ' / ' + optimals.optimalUpgraderCount());

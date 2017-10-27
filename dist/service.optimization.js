@@ -40,7 +40,7 @@ module.exports = {
 
   optimalFortifierCount: function () {
     // TODO: this should probably also incorporate:
-    // * the amount of buildings needing fortified
+    // * the amount of non-tower buildings needing fortified
 
     var screepsPerTower = 1;
     var currentTowersNeedingRepair = Game.spawns['Ankov'].room.find(FIND_MY_STRUCTURES, {
