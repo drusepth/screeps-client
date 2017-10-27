@@ -37,7 +37,7 @@ module.exports.loop = function () {
       Memory.rooms['Ankov']['roadsPlanned'] = false;
     }
 
-    if (Memory.rooms['Ankov']['roadsPlanned']) {
+    if (Memory.rooms['Ankov']['roadsPlanned'] === false) {
       console.log('Planning roads for Ankov');
       supervisorRoads.constructEnergyRoads('Ankov');
     } else {
