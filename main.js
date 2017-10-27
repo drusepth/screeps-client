@@ -12,6 +12,8 @@ var serviceTagger     = require('service.tagger');
 var serviceStats      = require('service.stats');
 var serviceDecorator  = require('service.map_decorator');
 
+var supervisorRoads   = require('supervisor.roads');
+
 module.exports.loop = function () {
     // Clear memory storage for any since-deceased screeps
     serviceMemory.clearDeadScreepMemory();
