@@ -5,7 +5,7 @@ module.exports = {
   },
 
   findWithFilter: function (creep, find_query, filter) {
-    return creep.room.find(find_query, { filter: filter; } );
+    return creep.room.find(find_query, { filter: filter } );
   },
 
   closest: function (creep, find_query) {
