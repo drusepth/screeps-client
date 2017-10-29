@@ -15,8 +15,6 @@ var roleBuilder = {
     }
 
     if (this.currentlyBuilding()) {
-      var constructionSitesByDistance = closest.constructionSites(this.creep);
-
       var constructionSites = this.unfinishedConstructionSites();
       if (constructionSites.length > 0) {
         if (this.creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
