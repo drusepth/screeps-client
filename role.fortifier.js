@@ -72,8 +72,8 @@ var roleFortifier = {
           structure.structureType == STRUCTURE_ROAD ||
           structure.structureType == STRUCTURE_CONTAINER
         ) && (
-          structure.hits   < structure.hitsMax ||
-          structure.energy < structure.energyCapacity
+          structure.hits   <  structure.hitsMax ||
+          structure.energy <= structure.energyCapacity
         );
       }
     }).sort((s1, s2) => {
